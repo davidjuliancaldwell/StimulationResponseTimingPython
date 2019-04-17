@@ -23,6 +23,7 @@ kruskalList = list()
 adList= list()
 summaryList = list()
 cldSubjs = list()
+ptList = list()
 
 index = 1
 for (sid in sidVec){
@@ -50,14 +51,16 @@ for (sid in sidVec){
      filter(n>7) %>%
      summarize(adTest = ad.test(Response.Time..ms.)[[2]])
    
+   kruskalList[[index]] <- kruskal.test(Response.Time..ms. ~ Experiment,data=dataRT)
+   summary
    
    if(sid != 'a1355e'){
    PT = dunnTest(Response.Time..ms. ~ Experiment,data=dataRT,
                  method="bh")    # Can adjust p-values; 
    PT = PT$res
    
-   kruskalList[[index]] <- kruskal.test(Response.Time..ms. ~ Experiment,data=dataRT)
- summary
+   ptList[[index]] = PT
+
    cldSubjs[[index]] <-cldList(comparison = PT$Comparison,
                                    p.value    = PT$P.adj,
                                    threshold  = 0.05)
