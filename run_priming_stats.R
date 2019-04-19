@@ -52,17 +52,19 @@ for (sid in sidVec){
      filter(n>7) %>%
      summarize(adTest = ad.test(Response.Time..ms.)[[2]])
    
-   kruskalList[[index]] <- kruskal.test(Response.Time..ms. ~ Experiment,data=dataRT)
-   summary
    
    dataForsythe <- dataRT %>% 
      filter(n>5) 
+   
+   kruskalList[[index]] <- kruskal.test(Response.Time..ms. ~ Experiment,data=dataForsythe)
+   summary
+
    
    forsytheList[[index]] <- bf.test(Response.Time..ms. ~ Experiment, data=dataForsythe, alpha = 0.05, na.rm = TRUE, verbose = TRUE)
 
    
    if(sid != 'a1355e'){
-   PT = dunnTest(Response.Time..ms. ~ Experiment,data=dataRT,
+   PT = dunnTest(Response.Time..ms. ~ Experiment,data=dataForsythe,
                  method="bh")    # Can adjust p-values; 
    PT = PT$res
    
