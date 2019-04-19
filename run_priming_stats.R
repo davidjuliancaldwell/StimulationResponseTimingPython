@@ -6,7 +6,7 @@ library('FSA')
 library('rcompanion')
 library("dplyr")
 library('nortest')
-
+library('onewaytests')
 
 rootDir = here()
 dataDir = here()
@@ -24,6 +24,7 @@ adList= list()
 summaryList = list()
 cldSubjs = list()
 ptList = list()
+forsytheList = list()
 
 index = 1
 for (sid in sidVec){
@@ -46,13 +47,19 @@ for (sid in sidVec){
    dataRT <- dataRT %>%
      add_count(Experiment)
    
-   adList <- dataRT %>% 
+   adList[[index]] <- dataRT %>% 
      group_by(Experiment) %>% 
      filter(n>7) %>%
      summarize(adTest = ad.test(Response.Time..ms.)[[2]])
    
    kruskalList[[index]] <- kruskal.test(Response.Time..ms. ~ Experiment,data=dataRT)
    summary
+   
+   dataForsythe <- dataRT %>% 
+     filter(n>5) 
+   
+   forsytheList[[index]] <- bf.test(Response.Time..ms. ~ Experiment, data=dataForsythe, alpha = 0.05, na.rm = TRUE, verbose = TRUE)
+
    
    if(sid != 'a1355e'){
    PT = dunnTest(Response.Time..ms. ~ Experiment,data=dataRT,
